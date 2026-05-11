@@ -1,0 +1,14 @@
+import direcciones.*
+
+describe "Direcciones" {
+  test "Mover a la izquierda reduce x en 1" {
+    assert.equals(game.at(0, 2), izquierda.siguiente(game.at(1, 2)))
+  }
+  
+  test "No se puede mover a la izquierda si x == 0" {
+    assert.throwsExceptionWithMessage(
+      "Estás en el límite del tablero",
+      { izquierda.siguiente(game.at(0, 2)) }
+    )
+  }
+}
