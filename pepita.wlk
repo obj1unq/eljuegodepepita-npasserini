@@ -1,48 +1,142 @@
-import wollok.game.*
+import direcciones.*
 import extras.*
+import comidas.*
+import game
+
+object ganadora {
+	
+	method image() = "ganadora"
+
+	method puedeIr(siguientePosicion) {
+		return false
+	}
+}
+object perdedora {
+
+	method image() = "perdedora"
+	
+	method puedeIr(siguientePosicion) {
+		return false
+	}
+}
+
+object cansada {
+
+	method image() = "perdedora"
+	
+	method puedeIr(siguientePosicion) {
+		return false
+	}
+}
+
+object libre {
+	
+	method image() = "libre"
+
+	method puedeIr(siguientePosicion) {
+		return tablero.dentro(siguientePosicion) and game.getObjectsIn(siguientePosicion).all({visual => visual.atravesable() })
+	}
+}
+
 object pepita {
-	const perseguidor = silvestre
+	var energia = 500
 
-	var energia = 100
+	var property position = game.origin()
 
-	var property position = game.at(2,3)
-    	
-	// method position() = position
-	// method position(newPosition) {
-	// 	position = newPosition
-	// }
-    method estado(){
-	    return if(self.atrapada()) "gris" else "libre"
-		//return if(position == perseguidor.position()) "gris" else "libre"
+	var property estado = libre
+	
+	method image() {
+		return "pepita-" + estado.image() + ".png"
 	}
 
-	method atrapada() = position == perseguidor.position()
+	method text() {
+		return energia.toString()
+	}
+	method textColor() {
+		return "FF0000FF"
+	}
+	
+	method ganar() {
+		estado = ganadora
+		self.terminar("gané")
+	}
+	
+	method perder() {
+		estado = perdedora
+		self.terminar("perdí")
+	}
 
-	method color() = "113300FF"
-	method text() = "\n\n\n\n" + energia
+	method terminar(mensaje) {
+		game.say(self, mensaje)
+		gravedad.detener()
+		game.schedule(4000, {game.stop()})
+	}
 
-
-    //TESTEAR!!!!!!!!
-	method image() = "pepita-" + self.estado() + ".png"
-	//method image() = "pepita-" +  (if(self.atrapada()) "gris" else "libre") + ".png"
-
-	method positionX() = position.x()
 
 	method comer(comida) {
 		energia = energia + comida.energiaQueOtorga()
+		if (game.hasVisual(comida)){ //lo dejo con un if porque pepita podría comer cosas que no están en el tablero, por ejemplo en los tests
+			game.removeVisual(comida)
+		}
 	}
 
-    method mover(direccion){
-	  position = direccion.siguiente(position)
-
+	method validarVolar(distancia){
+		if (not self.puedeVolar(distancia)) {
+			self.error("No puedo volar " + distancia)
+		}
 	}
-
 
 	method volar(kms) {
-		energia = energia - 10 - kms 
+		self.validarVolar(kms)
+		energia = energia - self.energiaQueGasta(kms)
 	}
 	
-	method energia() = energia
+	method energia() {
+		return energia
+	}
+
+	method energiaQueGasta(distancia) {
+		return  10 + distancia
+	}
+
+	method puedeVolar(distancia) {
+		return self.energiaQueGasta(distancia) <= energia
+	}
+
+	method puedeMover(siguientePosicion) {
+		return self.puedeVolar(1) and self.puedeIr(siguientePosicion) 
+	}
+	
+	method puedeIr(siguientePosicion) {
+		return self.estado().puedeIr(siguientePosicion)
+	} 
+
+	method validarMover(siguientePosicion){
+		if (not self.puedeMover(siguientePosicion)) {
+			self.error("No puedo ir ahí")
+		}
+	}
+
+	method mover(direccion) {
+		const siguientePosicion = direccion.siguiente(position)
+		self.validarMover(siguientePosicion)
+		self.volar(1)
+		position = siguientePosicion
+	}
+	
+	method caer() {
+		const siguiente = abajo.siguiente(position)
+		//para pensar: por que acá hago un if e ignoro mientras que en el mover valido y rompo?
+		if (self.puedeIr(siguiente)) {
+			position = siguiente
+		}
+		else{
+			if (not self.puedeVolar(1)) { //Si no pudo caer y no puede volar más, entonces perdió
+				self.perder()
+			}
+		}
+	}
+
 
 }
 

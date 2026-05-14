@@ -1,24 +1,24 @@
 import pepita.*
 import comidas.*
 import direcciones.*
-// import niveles.*
+import nivel.*
 import extras.*
 import wollok.game.*
 
 program PepitaGame {
-	game.title("Pepita")
-	game.height(10)
-	game.width(10)
+	game.title("Pepita") 	//Valor por defecto "Wollok Game"
+	game.height(10) 		//valor por defecto 5
+	game.width(10) 			//valor por defecto 5
+	game.cellSize(50) 		//valor por defecto 50
 	game.boardGround("fondo2.jpg")
 
-	keyboard.up().onPressDo({ pepita.mover(arriba) })
-    keyboard.down().onPressDo({ pepita.mover(abajo)})
-    keyboard.right().onPressDo({ pepita.mover(derecha)})
-    keyboard.left().onPressDo({ pepita.mover(izquierda)})
-
-   	keyboard.c().onPressDo({ pepita.comer("?") })
+    juego.configurarTeclas()
+    juego.agregarVisuales()
 	
-	game.addVisual(silvestre)
-	game.addVisualCharacter(pepita)
+	gravedad.agregar(pepita)
+	gravedad.comenzar()
+
+	game.onCollideDo(pepita, {algo => algo.colisionar(pepita)})
+
 	game.start()
 }

@@ -1,11 +1,22 @@
 import pepita.*
 import comidas.*
+import wollok.game.*
 
 describe "Tests de Pepita" {
+	const alpiste = new Alpiste()
+	const manzana = new Manzana()
+	
+	const comidasNew = #{new Alpiste(), new Manzana()}
+	const comidas = [alpiste, manzana]
+
+	method initialize(){
+		
+		game.addVisual(pepita)
+	}
 
 
 	test "Al comer pepita aumenta su energia" {
-		pepita.comer(manzana)
+		pepita.comer(new Manzana(base = 5))
 		assert.equals(105, pepita.energia())
 	}
 
