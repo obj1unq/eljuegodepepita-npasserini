@@ -7,29 +7,39 @@ import randomizer.*
 
 object juego{    
     var property mapaActual = mapa
+    const obstaculos = #{}
+
+    method agregarObstaculo(obstaculo){
+        obstaculos.add(obstaculo)
+    }
+
+    method hayObstaculo(posicion){
+        return obstaculos.any({ obstaculo => obstaculo.position() == posicion})
+    }
+
+    method configurarJuego(){
+
+        self.configurarTeclas()
+        self.agregarVisuales()
+		
+        gravedad.agregar(pepita)
+    	gravedad.comenzar()
+
+	    game.onCollideDo(pepita, {algo => algo.colisionar(pepita)})
+    }
 
     //Se descarta en pos de dibujar el mapa
     method agregarVisuales(){
-        game.addVisual(nido)
-    	game.addVisual(silvestre)
-    	game.addVisual(new Muro())
-    	game.addVisual(new Manzana())
-    	game.addVisual(new Alpiste())
-        self.iniciarSpawner()
-    	game.addVisual(pepita)
+        self.crearMapa()
+        //game.addVisual(nido)
+    	//game.addVisual(silvestre)
+    	//game.addVisual(new Muro())
+    	//game.addVisual(new Manzana())
+    	//game.addVisual(new Alpiste())
+        comidas.comenzar()
+    	//game.addVisual(pepita)
     } 
-
-    method iniciarSpawner(){
-        game.onTick(1000, "spawner", { self.spawnear() })
-
-    }
-
-     method spawnear(){
-        const comida = [new Manzana(), new Alpiste()].anyOne()
     
-        comida.position(randomizer.emptyPosition())
-        game.addVisual(comida)
-    }
 
     method configurarTeclas(){
 	    keyboard.left().onPressDo({pepita.mover(izquierda)})
@@ -40,11 +50,8 @@ object juego{
 
     method crearMapa(){
         mapaActual.construir()
-
-
     }
 }
-
 
 object _{
     method dibujar(position) {
@@ -54,9 +61,10 @@ object _{
 
 object m{
     method dibujar(position) {
-        game.addVisual(new Muro(position=position))
+        const muro = new Muro(position=position)
+        juego.agregarObstaculo(muro)
+        game.addVisual(muro)
     }
-
 }
 
 object n{
@@ -72,7 +80,7 @@ object p{
     method dibujar(position) {
         pepita.position(position)
     }
-        
+     
 }
 
 object s{
@@ -86,13 +94,13 @@ object mapa {
     const dibujo =[
         [ _, _, _, m, _, _, n, _, _, _ ],
         [ _, _, _, m, _, _, _, _, _, _ ],
-        [ s, _, _, m, _, _, _, _, _, _ ],
+        [ _, _, _, m, _, _, _, _, _, _ ],
         [ _, _, _, m, _, _, _, _, _, _ ],
         [ _, _, _, m, m, m, _, _, _, _ ],
         [ _, _, _, _, _, _, _, _, _, _ ],
         [ _, _, _, m, m, _, _, _, _, _ ],
         [ p, _, _, _, _, _, _, _, _, _ ],
-        [ _, _, _, _, _, _, _, _, _, _ ]
+        [ _, _, _, s, _, _, _, _, _, _ ]
     ].reverse() //Es necesario el reverse porque el y=0 en realidad corresponde a la altura mas alta
 
     method construir() {

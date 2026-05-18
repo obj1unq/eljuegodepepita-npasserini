@@ -6,11 +6,11 @@ object nido {
   
   method image() = "nido.png"
 
-  method atravesable() {
-    return true
-  }
+//   method atravesable() {
+//     return true
+//   }
 
-  method colision(personaje) {
+  method colisionar(personaje) {
 		personaje.ganar()
 	}
 }
@@ -30,17 +30,17 @@ object silvestre {
 
   method image() = "silvestre.png"
 
-  method atravesable() = true
+//   method atravesable() = true
 
   method colisionar(personaje) {
 		personaje.perder()
-	}
+  }
+  
 }
 
 object gravedad {
-
     const property cuerposLibres = #{} //podría solo trabajar con pepita, pero dejo preparado para que otras cosas puedan caerse, quizas los alimentos?
-     
+
     method agregar(cuerpoLibre) {
         cuerposLibres.add(cuerpoLibre)
     }
@@ -65,7 +65,7 @@ class Muro {
     method  image() {
         return "muro.png"
     }
-    method atravesable() {
-        return false
-    }
+    // method atravesable() {
+    //     return false
+    // }
 }

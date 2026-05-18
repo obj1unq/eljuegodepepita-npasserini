@@ -1,7 +1,8 @@
 import direcciones.*
 import extras.*
 import comidas.*
-import game
+import wollok.game.*
+import nivel.*
 
 object ganadora {
 	
@@ -34,7 +35,7 @@ object libre {
 	method image() = "libre"
 
 	method puedeIr(siguientePosicion) {
-		return tablero.dentro(siguientePosicion) and game.getObjectsIn(siguientePosicion).all({visual => visual.atravesable() })
+		return tablero.dentro(siguientePosicion) and not juego.hayObstaculo(siguientePosicion)
 	}
 }
 
@@ -136,7 +137,6 @@ object pepita {
 			}
 		}
 	}
-
 
 }
 

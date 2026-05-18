@@ -1,15 +1,12 @@
 import wollok.game.*
-
+import randomizer.*
 
 class Manzana {
 	const base = 5
 	var madurez = 1
+
 	var property position = game.origin()
 
-	method position() {
-		return position //game.at(8,8)
-	}
-	
 	method image() {
 		return "manzana.png"
 	}
@@ -23,9 +20,9 @@ class Manzana {
 		//madurez += 1
 	}
 
-    method atravesable() {
-        return true
-    }
+    // method atravesable() {
+    //     return true
+    // }
 
 	method colisionar(personaje) {
 		personaje.comer(self)
@@ -59,52 +56,80 @@ class Manzana {
 }*/
 
 class Alpiste {
-    const property energiaQueAporta  = 20 //Si no se dice al instanciar se utiliza este valor por defecto.
+    const property peso = 40 //Si no se dice al instanciar se utiliza este valor por defecto.
 	//const property energiaQueAporta //Obliga a que al crearlo se deba indicar un valor.
 	var property position = game.origin()
-
-
-	method position() {
-		return game.at(3,8)
-	}
 	
 	method image() {
 		return "alpiste.png"
 	}
 
 	method energiaQueOtorga() {
-		return energiaQueAporta
+		return peso
 	} 
 
-    method atravesable() {
-        return true
-    }
+    // method atravesable() {
+    //     return true
+    // }
 
 	method colisionar(personaje) {
 		personaje.comer(self)
 		game.removeVisual(self)
+		comidas.liberarComida()
 	}
 }
 
-/* CHEQUEAR
+class AlpisteCambiante {
+    const property pesoMin = 40
+	const property pesoMax = 100
+	
+	var property position = game.origin()
+	
+	method image() {
+		return "alpiste.png"
+	}
 
+	method energiaQueOtorga() {
+		return pesoMin.randomUpTo(pesoMax).truncate(0)
+	} 
+
+    // method atravesable() {
+    //     return true
+    // }
+
+	method colisionar(personaje) {
+		personaje.comer(self)
+		game.removeVisual(self)
+		comidas.liberarComida()
+	}
+}
+
+//Ejemplo con factory (fábrica). 
 object manzanaFactory {
 	method crear() {
 		return new Manzana(position = randomizer.emptyPosition())
 	}
 }
+
 object alpisteFactory {
 	method crear() {
 		return new Alpiste(position = randomizer.emptyPosition(), peso=40.randomUpTo(100).truncate(0))
 	}
 }
 
+object alpisteCambianteFactory {
+	method crear() {
+		return new AlpisteCambiante(position = randomizer.emptyPosition())
+	}
+}
 
 object comidas {
-	const factories = [alpisteFactory,alpisteFactory, manzanaFactory]
-	const enElTablero = #{}
+	const factories = [alpisteFactory, manzanaFactory, alpisteCambianteFactory, manzanaFactory]
+	var enElTablero = 0
 
-
+	method liberarComida(){
+		enElTablero -= 1
+	}
 
 	method comenzar() {
 		game.onTick(3000, "COMIDAS", {self.nuevaComida()})
@@ -115,10 +140,9 @@ object comidas {
 	}
 
 	method nuevaComida() {
-		if (enElTablero.size() < self.maximo()) {
-			const comida = self.crearComida()
-			game.addVisual(comida)
-			enElTablero.add(comida)
+		if (enElTablero < self.maximo()) {
+			game.addVisual(self.crearComida())
+			enElTablero += 1
 		}
 	}
 
@@ -128,7 +152,6 @@ object comidas {
 	
 	method elegirFactory() {
 		return factories.anyOne()
-		
 		// Para probabilidades raras
 		// const probabilidad =  0.randomUpTo(1) 
 		// if (probabilidad.between(0, 0.15)) {
@@ -140,72 +163,11 @@ object comidas {
 		// else {
 		// 	return milanesaFactory
 		// }
-
 	}
 
 	method remover(comida) {
 		if (enElTablero.contains(comida)){ //lo dejo con un if porque pepita podría comer cosas que no están en el tablero, por ejemplo en los tests
 			enElTablero.remove(comida)
-			game.removeVisual(comida)
 		}
 	}
 }
-
-class Manzana {
-
-	const base= 5
-	var madurez = 1
-	const position
-	
-	
-	method position() {
-		return position
-	}
-	
-	method image() {
-		return "manzana.png"
-	}
-
-	method energiaQueOtorga() {
-		return base * madurez	
-	}
-	
-	method madurar() {
-		madurez = madurez + 1
-		//madurez += 1
-	}
-    method atravesable() {
-        return true
-    }
-
-	method colision(personaje) {
-		personaje.comer(self)
-	}
-}
-
-class Alpiste {
-
-	const property position
-	const peso 
-	
-	method image() {
-		return "alpiste.png"
-	}
-
-	method text() {
-		return peso.toString()
-	}
-
-	method energiaQueOtorga() {
-		return peso
-	} 
-    method atravesable() {
-        return true
-    }
-
-	method colision(personaje) {
-		personaje.comer(self)
-	}
-
-}
-*/

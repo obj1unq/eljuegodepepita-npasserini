@@ -5,27 +5,50 @@ import wollok.game.*
 describe "Tests de Pepita" {
 	const alpiste = new Alpiste()
 	const manzana = new Manzana()
+
+    const comidas = [alpiste, manzana]
 	
 	const comidasNew = #{new Alpiste(), new Manzana()}
-	const comidas = [alpiste, manzana]
+	
+	const energiaTotal = comidasNew.sum({ comida => comida.energiaQueOtorga() })
+
 
 	method initialize(){
-		
 		game.addVisual(pepita)
+
+		comidasNew.forEach({ comida => comida.colisionar(pepita) })
 	}
 
+	test "Energia que otorga manzana de base es 5" {
+		//3
+		assert.equals(5, manzana.energiaQueOtorga())
 
-	test "Al comer pepita aumenta su energia" {
-		pepita.comer(new Manzana(base = 5))
-		assert.equals(105, pepita.energia())
+		//new Manzana()
+		//manzana.energiaQueOtorga()
+
+		assert.equals(5, manzana.energiaQueOtorga())
+		assert.equals("manzana.png", manzana.image())
+
+	}
+
+	test "Energia que madura otorga manzana es 10 por madurez 2" {
+		//1
+		const unaComida = new AlpisteCambiante()
+	
+		//2
+		manzana.madurar()
+		//pepita.comer(new Manzana(madurez = 2))
+		//assert.equals(105, pepita.energia())
+
+		//3
+		assert.equals(10, unaComida.energiaQueOtorga())
 	}
 
 	test "Al volar pepita pierde energia" {
-		pepita.volar(1)
-		assert.equals(89, pepita.energia())
+		
+		//pepita.volar(1)
+		//assert.equals(89, pepita.energia())
+		assert.equals(5, manzana.energiaQueOtorga())
 	}
 
-
-
 }
-

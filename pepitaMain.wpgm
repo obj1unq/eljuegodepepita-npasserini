@@ -12,13 +12,7 @@ program PepitaGame {
 	game.cellSize(50) 		//valor por defecto 50
 	game.boardGround("fondo2.jpg")
 
-    juego.configurarTeclas()
-    juego.agregarVisuales()
-	
-	gravedad.agregar(pepita)
-	gravedad.comenzar()
-
-	game.onCollideDo(pepita, {algo => algo.colisionar(pepita)})
+    juego.configurarJuego()
 
 	game.start()
 }
