@@ -6,49 +6,52 @@ describe "Tests de Pepita" {
 	const alpiste = new Alpiste()
 	const manzana = new Manzana()
 
+	//Ejemplo usando instancias referenciadas por referencias en el describe.
     const comidas = [alpiste, manzana]
 	
+	//Ejemplo instanciando como elemento de una colección
 	const comidasNew = #{new Alpiste(), new Manzana()}
 	
-	const energiaTotal = comidasNew.sum({ comida => comida.energiaQueOtorga() })
+	//const energiaTotal = comidasNew.sum({ comida => comida.energiaQueOtorga() })
 
 
 	method initialize(){
 		game.addVisual(pepita)
 
-		comidasNew.forEach({ comida => comida.colisionar(pepita) })
+		//Ejemplo de que pepita colisiones 
+		//con todos los elementos de una colección antes de cada test.
+		//comidasNew.forEach({ comida => comida.colisionar(pepita) })
 	}
 
 	test "Energia que otorga manzana de base es 5" {
-		//3
+		//3 //No necesita paso1 y 2.
 		assert.equals(5, manzana.energiaQueOtorga())
 
-		//new Manzana()
-		//manzana.energiaQueOtorga()
+		//new Manzana() //NO tiene sentido crear un objeto "en el aire"!
+		//manzana.energiaQueOtorga() //No tiene sentido hacer una consulta "en el aire"!
 
 		assert.equals(5, manzana.energiaQueOtorga())
 		assert.equals("manzana.png", manzana.image())
 
 	}
 
+	//Ejemplo te test con 3 pasos.
 	test "Energia que madura otorga manzana es 10 por madurez 2" {
 		//1
-		const unaComida = new AlpisteCambiante()
+		const unaManzana = new Manzana()
 	
 		//2
-		manzana.madurar()
+		unaManzana.madurar()
 		//pepita.comer(new Manzana(madurez = 2))
 		//assert.equals(105, pepita.energia())
 
 		//3
-		assert.equals(10, unaComida.energiaQueOtorga())
+		assert.equals(10, unaManzana.energiaQueOtorga())
 	}
 
 	test "Al volar pepita pierde energia" {
-		
-		//pepita.volar(1)
-		//assert.equals(89, pepita.energia())
-		assert.equals(5, manzana.energiaQueOtorga())
+		pepita.volar(1)
+		assert.equals(89, pepita.energia())
 	}
 
 }

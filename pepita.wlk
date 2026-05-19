@@ -8,6 +8,10 @@ object ganadora {
 	
 	method image() = "ganadora"
 
+	method ganar(ave){
+		ave.terminar("gané!")
+	}
+
 	method puedeIr(siguientePosicion) {
 		return false
 	}
@@ -16,6 +20,10 @@ object perdedora {
 
 	method image() = "perdedora"
 	
+	method perder(ave){
+		ave.terminar("perdí!")
+	}
+
 	method puedeIr(siguientePosicion) {
 		return false
 	}
@@ -25,14 +33,28 @@ object cansada {
 
 	method image() = "perdedora"
 	
+	method perder(ave){
+		ave.estado(perdedora)
+		ave.perder()
+	}
+
 	method puedeIr(siguientePosicion) {
 		return false
 	}
 }
 
 object libre {
-	
-	method image() = "libre"
+ 	method image() = "libre"
+
+	method ganar(ave){
+		ave.estado(ganadora)
+		ave.ganar()
+	}
+
+	method perder(ave){
+		ave.estado(perdedora)
+		ave.perder()
+	}
 
 	method puedeIr(siguientePosicion) {
 		return tablero.dentro(siguientePosicion) and not juego.hayObstaculo(siguientePosicion)
@@ -40,7 +62,7 @@ object libre {
 }
 
 object pepita {
-	var energia = 500
+	var energia = 100
 
 	var property position = game.origin()
 
@@ -58,19 +80,17 @@ object pepita {
 	}
 	
 	method ganar() {
-		estado = ganadora
-		self.terminar("gané")
+		estado.ganar(self)
 	}
 	
 	method perder() {
-		estado = perdedora
-		self.terminar("perdí")
+		estado.perder(self)
 	}
 
 	method terminar(mensaje) {
 		game.say(self, mensaje)
 		gravedad.detener()
-		game.schedule(4000, {game.stop()})
+		game.schedule(2000, {game.stop()})
 	}
 
 

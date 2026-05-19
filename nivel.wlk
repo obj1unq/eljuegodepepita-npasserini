@@ -31,6 +31,9 @@ object juego{
     //Se descarta en pos de dibujar el mapa
     method agregarVisuales(){
         self.crearMapa()
+
+        //pepita.comer(new Manzana(base=500, madurez = 5)) // para testear con Pepite más enérgica.
+    
         //game.addVisual(nido)
     	//game.addVisual(silvestre)
     	//game.addVisual(new Muro())

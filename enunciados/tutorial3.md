@@ -3,7 +3,7 @@
 > Objetivo del nivel: acciones con colisiones
 
 ### Contexto
-¡Nuestros niveles van tomando onda! Ahora queremos agregar acciones que se ejecuten cuando Pepita colisione con otro objeto. Decimos que se produce una colisión entre dos objetos cuando ambos se encuentran en la misma posicin.
+¡Nuestros niveles van tomando onda! Ahora queremos agregar acciones que se ejecuten cuando Pepita colisione con otro objeto. Decimos que se produce una colisión entre dos objetos cuando ambos se encuentran en la misma posición.
 
 Ahora Pepita gana al colisionar con el nido y termina el juego. Pero... ¿qué pasa al colisionar con otra cosa?
 
